@@ -1,1 +1,2 @@
 
+b=0.001,m=0.5 is the best hyperparameter that original RGC algorithm achieve the best performance in YALE dataset. We save the S matrix in this setting.
