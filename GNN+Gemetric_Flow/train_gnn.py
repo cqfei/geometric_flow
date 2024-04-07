@@ -149,22 +149,9 @@ def train_GCL(data,dataset_name, encoder_model,contrast_model,best_model_dir,tra
     learning_rate = model_args[model_name][dataset_name]['learning_rate']
     weight_decay = model_args[model_name][dataset_name]['weight_decay']
     epochs = model_args[model_name][dataset_name]['epochs']
-
-    # if model_name=='DGI':
-    #     gconv = DGI_GConv(input_dim=data.num_features, hidden_dim=512, num_layers=2).to(device)
-    #     encoder_model = DGI_Encoder(encoder=gconv, hidden_dim=512).to(device)
-    #     contrast_model = SingleBranchContrast(loss=L.JSD(), mode='G2L').to(device)
-    # elif model_name=='GRACE':
-    #     aug1 = A.Compose([A.EdgeRemoving(pe=0.3), A.FeatureMasking(pf=0.3)])
-    #     aug2 = A.Compose([A.EdgeRemoving(pe=0.3), A.FeatureMasking(pf=0.3)])
-    #     gconv = GRACE_GConv(input_dim=data.num_features, hidden_dim=32, activation=torch.nn.ReLU, num_layers=2).to(device)
-    #     encoder_model = GRACE_Encoder(encoder=gconv, augmentor=(aug1, aug2), hidden_dim=32, proj_dim=32).to(device)
-    #     contrast_model = DualBranchContrast(loss=L.InfoNCE(tau=0.2), mode='L2L', intraview_negs=True).to(device)
-
     optimizer = torch.optim.Adam(encoder_model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-    # encoder = model.encode
+
     #################################################
-    # 开始训练
     loss_history = []
     train_f1_history = []
     val_f1_history = []
@@ -194,19 +181,17 @@ def train_GCL(data,dataset_name, encoder_model,contrast_model,best_model_dir,tra
         optimizer.step()
 
         if epoch % epoch_step == 0:
-            # with torch.no_grad():
-                x = z.detach().to(device)
-                y = torch.Tensor(data.y).to(device)
-                classifier=train_LR(x,y,train_mask,val_mask)
-                # y_train_pred = classifier.predict(z[train_mask].cpu().numpy())
-                y_train_pred = classifier(x[train_mask]).argmax(-1).detach().cpu().numpy()
-                train_f1 = f1_score(data.y[train_mask].cpu().numpy(), y_train_pred, average='micro')
+            x = z.detach().to(device)
+            y = torch.Tensor(data.y).to(device)
+            classifier=train_LR(x,y,train_mask,val_mask)
 
-                y_val_pred = classifier(x[val_mask]).argmax(-1).detach().cpu().numpy()
-                val_f1 = f1_score(data.y[val_mask].cpu().numpy(), y_val_pred, average='micro')
-                # logger.info(f'Val f1uracy: {val_f1:.6f}')
+            y_train_pred = classifier(x[train_mask]).argmax(-1).detach().cpu().numpy()
+            train_f1 = f1_score(data.y[train_mask].cpu().numpy(), y_train_pred, average='micro')
 
-                logger.info("Epoch: {:03d}: Loss {:.4f}, Trainf1 {:.4f}, Valf1 {:.4f}".format(epoch, loss.item(),
+            y_val_pred = classifier(x[val_mask]).argmax(-1).detach().cpu().numpy()
+            val_f1 = f1_score(data.y[val_mask].cpu().numpy(), y_val_pred, average='micro')
+
+            logger.info("Epoch: {:03d}: Loss {:.4f}, Trainf1 {:.4f}, Valf1 {:.4f}".format(epoch, loss.item(),
                                                                                                 train_f1.item(),
                                                                                                 val_f1.item()))
         loss_history.append(loss.item())
@@ -215,8 +200,6 @@ def train_GCL(data,dataset_name, encoder_model,contrast_model,best_model_dir,tra
 
         if best_val_f1 < val_f1:
             best_val_f1 = val_f1
-            # 保存模型
-            # best_model_dir = './models/' + model_name + '_' + best_model_tag + '.pt'
             torch.save(encoder_model.state_dict(), best_model_dir)
             best_epoch = epoch
     logger.info(f'Best Epoch: {best_epoch}')
@@ -226,23 +209,20 @@ def train_GCL(data,dataset_name, encoder_model,contrast_model,best_model_dir,tra
 def test(data,model,best_model_dir,train_mask,val_mask,test_mask,add_edge_weight=False):
     model.load_state_dict(torch.load(best_model_dir,next(model.parameters()).device))
     model.eval()
-    # 完成所有的训练epoch，计算最新模型下的准确率
     with torch.no_grad():
-        # 获取当前模型下的所有logits
         if add_edge_weight:
             logits = model(data.x, data.edge_index,data.edge_weight)
         else:
             logits = model(data.x, data.edge_index)
-        # logger.info("Best Epoch: {:04d}".format(best_epoch))
-        # 计算训练样本的预测准确率
+
         train_logits, train_label = logits[train_mask], data.y[train_mask]
         train_f1 = compute_f1(train_logits, train_label)
         logger.info("Best Train f1: {:.6f}".format(train_f1.item()))
-        # 计算验证样本的预测准确率
+
         val_logits, val_label = logits[val_mask], data.y[val_mask]
         val_f1 = compute_f1(val_logits, val_label)
         logger.info("Best Val f1: {:.6f}".format(val_f1.item()))
-        # 计算测试样本的预测准确率
+
         test_logits, test_label = logits[test_mask], data.y[test_mask]
         test_f1 = compute_f1(test_logits, test_label)
         logger.info("Best Test f1: {:.6f}".format(test_f1.item()))
@@ -253,19 +233,16 @@ def test_GAE(data,model,best_model_dir,train_mask,val_mask,test_mask,add_edge_we
     model.eval()
     if model_name=='GAE':
         if add_edge_weight:
-            # z = model.encode(data.x, data.train_edge_index,data.edge_weight)
             z ,x_recon= model(data.x, data.edge_index, data.edge_weight)
         else:
-            # z = model.encode(data.x, data.train_edge_index)
             z, x_recon = model(data.x, data.edge_index)
     elif model_name=='VGAE':
         if add_edge_weight:
             z, reconstructed_x, mu, logvar = model(data.x, data.edge_index,data.edge_weight)
         else:
             z, reconstructed_x, mu, logvar = model(data.x, data.edge_index)
-    # 完成所有的训练epoch，计算最新模型下的准确率
+
     with torch.no_grad():
-        # 获取当前模型下的所有logits
         classifier = LogisticRegression(solver='lbfgs', max_iter=1000)
         classifier.fit(z[train_mask].cpu().numpy(), data.y[train_mask].cpu().numpy())
         train_f1 = classifier.score(z[train_mask].cpu().numpy(), data.y[train_mask].cpu().numpy())
@@ -290,22 +267,17 @@ def test_GCL(data,dataset_name,encoder_model,contrast_model,best_model_dir,train
     else:
         z, _, _ = encoder_model(data.x, data.edge_index)
 
-    # with torch.no_grad():
     x = z.detach().to(device)
     y = torch.Tensor(data.y).to(device)
     classifier = train_LR(x, y, train_mask, val_mask)
-        # classifier = best_LR_classifier
-        # y_train_pred = classifier.predict(z[train_mask].cpu().numpy())
     y_train_pred = classifier(x[train_mask]).argmax(-1).detach().cpu().numpy()
     train_f1 = f1_score(data.y[train_mask].cpu().numpy(), y_train_pred, average='micro')
     logger.info(f'Train f1: {train_f1:.6f}')
 
-        # y_val_pred = classifier.predict(z[val_mask].cpu().numpy())
     y_val_pred = classifier(x[val_mask]).argmax(-1).detach().cpu().numpy()
     val_f1 = f1_score(data.y[val_mask].cpu().numpy(), y_val_pred, average='micro')
     logger.info(f'Validation f1: {val_f1:.6f}')
-
-        # y_test_pred = classifier.predict(z[test_mask].cpu().numpy())
+    
     y_test_pred = classifier(x[test_mask]).argmax(-1).detach().cpu().numpy()
     test_f1 = f1_score(data.y[test_mask].cpu().numpy(), y_test_pred, average='micro')
     logger.info(f'Test f1: {test_f1:.6f}')
@@ -379,15 +351,15 @@ def train_and_plot(data,dataset_name,model,best_model_dir,train_mask,val_mask,i,
     else:
         loss_history, train_f1_history, val_f1_history,best_epoch=train(data,dataset_name, model,best_model_dir, train_mask, val_mask,add_edge_weight,model_args)
     plot_loss_f1(loss_history, train_f1_history,val_f1_history, best_model_dir, i)
-    # plt.show()
     return best_epoch
+    
 def train_single_cross(data,dataset_name,train_mask,val_mask,test_mask,f1s,i,add_edge_weight,flow_iteration=0,is_flow=False,model_args=None):
     logger.info(f'cross train order: {i}')
     if is_flow:
         best_model_dir = f'./models/{model_name}_{dataset_name}_flow_iter_{flow_iteration}_cross_{i}.pt'
     else:
         best_model_dir = f'./models/{model_name}_{dataset_name}_cross_{i}.pt'
-    # train(data, model, best_model_dir, train_mask[:, i], val_mask[:, i])
+
     input_dim=data.num_features
     hidden_dim=model_args[model_name][dataset_name]['hidden_dim']
     out_dim=data.num_classes
@@ -396,18 +368,10 @@ def train_single_cross(data,dataset_name,train_mask,val_mask,test_mask,f1s,i,add
     elif model_name=='GAT':
         model = GAT_NN(input_dim, hidden_dim,out_dim,num_heads=8, num_layers=2).to(device)
         # model = GAT_NN(input_dim, hidden_dim, out_dim, num_heads=8).to(device)
-    elif model_name=='SAGE':
-        model = SAGE_NN(input_dim, hidden_dim,out_dim).to(device)
-    elif model_name=='GIN':
-        model = GIN_NN(input_dim, hidden_dim,out_dim).to(device)
     elif model_name=='GAE':
         model = GAE_NN(input_dim, hidden_dim).to(device)
         # model = GAE_NN(input_dim, hidden_dim,out_dim).to(device)
         # model = GAE(GCNEncoder(input_dim, hidden_dim,out_dim)).to(device)
-    elif model_name=='VGAE':
-        # model = VGAE(VariationalGCNEncoder(input_dim, hidden_dim,out_dim)).to(device)
-        # model = VGAE_NN(input_dim, hidden_dim, latent_dim=hidden_dim).to(device)
-        model = VGAE_NN(input_dim, 1024, 128).to(device)
     elif model_name=='DGI':
         gconv = DGI_GConv(input_dim=data.num_features, hidden_dim=hidden_dim, num_layers=2).to(device)
         encoder_model = DGI_Encoder(encoder=gconv, hidden_dim=hidden_dim).to(device)
@@ -450,7 +414,7 @@ def train_single_cross(data,dataset_name,train_mask,val_mask,test_mask,f1s,i,add
         encoder_model = GRACE_Encoder(encoder=gconv, augmentor=(aug1, aug2), hidden_dim=hidden_dim, proj_dim=32).to(device)
         contrast_model = DualBranchContrast(loss=L.InfoNCE(tau=0.2), mode='L2L', intraview_negs=True).to(device)
 
-    if model_name == 'GAE' or model_name == 'VGAE':
+    if model_name == 'GAE':
         train_GAE(data, dataset_name, model,best_model_dir, train_mask, val_mask,
                                                                                add_edge_weight, model_args)
     elif model_name == 'DGI' or model_name == 'GRACE':
@@ -460,7 +424,7 @@ def train_single_cross(data,dataset_name,train_mask,val_mask,test_mask,f1s,i,add
         train(data, dataset_name, model, best_model_dir,train_mask, val_mask, add_edge_weight,
                                                                            model_args)
 
-    if model_name=='GAE' or model_name=='VGAE':
+    if model_name=='GAE':
         # data = train_val_test_split_edges(data, val_ratio=0.1, test_ratio=0.1)
         test_f1 = test_GAE(data, model, best_model_dir, train_mask, val_mask, test_mask)
         f1s.append(test_f1)
@@ -501,8 +465,7 @@ def output_f1s(f1s):
     if isinstance(f1s[0], tuple):
         auc_list = [f1[0] for f1 in f1s]
         ap_list = [f1[1] for f1 in f1s]
-        # avg_auc = sum(auc_list) / len(auc_list)
-        # avg_ap = sum(ap_list) / len(ap_list)
+        
         mean_value_auc = np.mean(auc_list)
         std_deviation_auc = np.std(auc_list)
         mean_value_ap = np.mean(ap_list)
@@ -514,7 +477,6 @@ def output_f1s(f1s):
         logger.info(', '.join([str(auc) for auc in auc_list]))
         logger.info(', '.join([str(ap) for ap in ap_list]))
     else:
-        # avg = sum(f1s) / len(f1s)
         mean_value = np.mean(f1s)
         std_deviation = np.std(f1s)
         logger.info(f'avg: {mean_value}, standard deviation: {std_deviation}')
@@ -522,21 +484,14 @@ def output_f1s(f1s):
         return mean_value,std_deviation
 
 def run_mutiple_dataset(datasets,model_args,add_edge_weight):
-    #add_edge_weight为真 则在训练时使用Ricci Flow
-    # add_edge_weight=False
-    # add_edge_weight=True
+    # add_edge_weight is True,  then training with weight, if  add_edge_weight is False,  then training with no weight
     from itertools import product
     for dataset_name in datasets:
-        # logging.basicConfig(filename=f'./logs/{model_name}_{dataset_name}.log', level=logging.INFO)
-        # 设置初始日志文件
         current_time=datetime.now().strftime('%Y%m%d_%H%M%S')
         change_log_file(logger, f'./logs/{current_time}_{model_name}_{dataset_name}.log')
-        # logger.info('This log goes to the original file.')
-        # dataset_name=datasets[1]
         logger.info(f'dataset: {dataset_name}')
         print(model_args[model_name][dataset_name])
         data=load_data(dataset_name,device)
-        # data=load_created_data(device)
         if add_edge_weight:
             # from learner_gcn import RicciFlowTrainer
             f1s_list = []
