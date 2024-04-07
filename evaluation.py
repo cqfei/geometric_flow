@@ -7,7 +7,7 @@ import math
 from scipy.special import comb
 from sklearn import metrics
 
-def NMI_F1_ARI(X, ground_truth, n_cluster):
+def evaluate(X, ground_truth, n_cluster):
     X = [x.cpu().numpy() for x in X]
     # list to numpy
     X = np.array(X)
@@ -17,11 +17,9 @@ def NMI_F1_ARI(X, ground_truth, n_cluster):
     kmeans = KMeans(n_clusters=n_cluster, random_state=0).fit(X)
 
     logging.info('K-means done')
-    nmi, f1,acc,purity = compute_clutering_metric(np.asarray(kmeans.labels_), ground_truth)
+    nmi, f1,acc = compute_clutering_metric(np.asarray(kmeans.labels_), ground_truth)
     ari = metrics.adjusted_rand_score(ground_truth, np.asarray(kmeans.labels_))
-    # acc=metrics.accuracy_score(ground_truth,np.asarray(kmeans.labels_))
-    # print('ari:',ari)
-    return nmi, f1,ari,acc,purity,np.asarray(kmeans.labels_)
+    return nmi, f1,ari,acc,np.asarray(kmeans.labels_)
 
 def normalize(x):
     norm = x.norm(dim=1, p=2, keepdim=True)
@@ -119,27 +117,6 @@ def compute_clutering_metric(idx, item_ids):
         index = item_map[item_ids[i]]
         count_item[index] = count_item[index] + 1
 
-    # compute purity
-    purity = 0
-    for i in range(num_cluster):
-        member = np.where(idx == centers[i])[0]
-        member_ids = item_ids[member]
-
-        count = np.zeros(num_item)
-        for j in range(len(member)):
-            index = item_map[member_ids[j]]
-            count[index] = count[index] + 1
-        purity = purity + max(count)
-
-
-    # contingency_matrix = np.zeros((len(np.unique(item_ids)), len(np.unique(idx))))
-    #
-    # for i in range(len(item_ids)):
-    #     contingency_matrix[item_ids[i]][idx[i]] += 1
-    #
-    # # 计算Purity
-    # purity = np.sum(np.amax(contingency_matrix, axis=0)) / np.sum(contingency_matrix)
-
     # compute Normalized Mutual Information (NMI)
     count_cross = np.zeros((num_cluster, num_item))
     for i in range(N):
@@ -206,4 +183,4 @@ def compute_clutering_metric(idx, item_ids):
     beta = 1
     F = (beta*beta + 1) * P * R / (beta*beta * P + R)
 
-    return NMI, F,P,purity
+    return NMI, F,P
