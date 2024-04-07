@@ -302,5 +302,5 @@
     "round": 10,
     "epoch_step": 10
   },
-  "note": "Cora和CiteSeer的round在找最佳参数时设为5，其他的设为1，Cora和CiteSeer的cross_num设为1，其他的设为0。。在最终实验时，Cora和CiteSeer的round设为10，其他的设为1，Cora和CiteSeer的cross_num设为1，其他的设为0。"
+  "note": "The round of Cora and CiteSeer is set to 5 for finding the best parameter, the others to 1, cross_num of Cora and CiteSeer to 1, and 0 for the others. At the final experiment, round was set to 10 for Cora and CiteSeer, 1 for the others, cross_num was set to 1 for Cora and CiteSeer, and 0 for the others."
 }
