@@ -1,0 +1,383 @@
+{
+  "model_args":{
+    "GCN":{
+           "WikiCS": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 1500},
+           "Amazon_Photo": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 1500},
+           "Amazon_Computers": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 1500},
+           "Coauthor_CS": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 1500},
+           "Coauthor_Physics": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-5, "epochs": 2500},
+            "Cora": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "CiteSeer": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "PubMed": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500}
+        },
+    "GAT":{
+            "WikiCS": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 500},
+            "Amazon_Photo": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 500},
+            "Amazon_Computers": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 500},
+            "Coauthor_CS": {"hidden_dim": 256, "learning_rate": 0.01, "weight_decay": 1e-3, "epochs": 500},
+            "Coauthor_Physics": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 500},
+                  "Cora": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "CiteSeer": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "PubMed": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500}
+        },
+    "GIN": {
+            "WikiCS": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-3, "epochs": 2500},
+            "Amazon_Photo": {"hidden_dim": 256, "learning_rate": 0.005, "weight_decay": 5e-4, "epochs": 2500},
+            "Amazon_Computers": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-4, "epochs": 2500},
+            "Coauthor_CS": {"hidden_dim": 256, "learning_rate": 0.01, "weight_decay": 5e-4, "epochs": 2500},
+            "Coauthor_Physics": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+                  "Cora": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "CiteSeer": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "PubMed": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500}
+        },
+    "SAGE": {
+                 "WikiCS": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-3, "epochs": 2500},
+                 "Amazon_Photo": {"hidden_dim": 256, "learning_rate": 0.005, "weight_decay": 5e-4, "epochs": 2500},
+                 "Amazon_Computers": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-4, "epochs": 2500},
+                 "Coauthor_CS": {"hidden_dim": 256, "learning_rate": 0.01, "weight_decay": 5e-4, "epochs": 2500},
+                  "Cora": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "CiteSeer": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "PubMed": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500}
+                 },
+    "GAE": {
+            "WikiCS": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-3, "epochs": 2500},
+            "Amazon_Photo": {"hidden_dim": 256, "learning_rate": 0.005, "weight_decay": 5e-4, "epochs": 2500},
+            "Amazon_Computers": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-4, "epochs": 2500},
+            "Coauthor_CS": {"hidden_dim": 256, "learning_rate": 0.01, "weight_decay": 5e-4, "epochs": 2500},
+                  "Cora": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "CiteSeer": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "PubMed": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500}
+    },
+    "VGAE": {
+            "WikiCS": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-3, "epochs": 2500},
+            "Amazon_Photo": {"hidden_dim": 256, "learning_rate": 0.005, "weight_decay": 5e-4, "epochs": 2500},
+            "Amazon_Computers": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-4, "epochs": 2500},
+            "Coauthor_CS": {"hidden_dim": 256, "learning_rate": 0.01, "weight_decay": 5e-4, "epochs": 2500},
+                  "Cora": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "CiteSeer": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "PubMed": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500}
+    },
+        "DGI": {
+            "WikiCS": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-3, "epochs": 2500},
+            "Amazon_Photo": {"hidden_dim": 256, "learning_rate": 0.005, "weight_decay": 5e-4, "epochs": 2500},
+            "Amazon_Computers": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-4, "epochs": 2500},
+            "Coauthor_CS": {"hidden_dim": 256, "learning_rate": 0.01, "weight_decay": 5e-4, "epochs": 2500},
+                  "Cora": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "CiteSeer": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "PubMed": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500}
+    },
+        "GRACE": {
+            "WikiCS": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-3, "epochs": 2500},
+            "Amazon_Photo": {"hidden_dim": 256, "learning_rate": 0.005, "weight_decay": 5e-4, "epochs": 2500},
+            "Amazon_Computers": {"hidden_dim": 256, "learning_rate": 0.001, "weight_decay": 1e-4, "epochs": 2500},
+            "Coauthor_CS": {"hidden_dim": 256, "learning_rate": 0.01, "weight_decay": 5e-4, "epochs": 2500},
+                  "Cora": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "CiteSeer": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500},
+            "PubMed": {"hidden_dim": 128, "learning_rate": 0.001, "weight_decay": 5e-4, "epochs": 2500}
+    }
+  },
+  "model_args_debugs": [
+    {
+      "hidden_dim" : [256],
+    "learning_rate" : [0.00001,0.00005,0.0001, 0.0005, 0.001, 0.005, 0.01],
+    "weight_decay" :[1e-5,5e-5,1e-4, 5e-4, 1e-3,5e-3,1e-2],
+      "epochs": [2500]
+    },
+    {
+      "hidden_dim" : [128],
+      "learning_rate" : [0.0001],
+      "weight_decay" : [1e-5, 2e-5, 3e-5, 4e-5, 5e-5, 6e-5, 7e-5, 8e-5, 9e-5,1e-4
+          ,2e-4,3e-4,4e-4,5e-4,6e-4,7e-4,8e-4,9e-4,  1e-3,
+                      2e-3,3e-3,4e-3,5e-3,6e-3,7e-3,8e-3,9e-3,1e-2],
+      "epochs": [2500]
+    },
+    {
+      "hidden_dim" : [128],
+      "learning_rate": [0.0001,0.0002,0.0003,0.0004,0.0005, 0.001, 0.002, 0.003, 0.004, 0.005
+                     , 0.006, 0.007, 0.008, 0.009,0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1],
+      "weight_decay": [5e-05],
+      "epochs": [2500]
+    },
+    {
+      "hidden_dim" : [256],
+      "learning_rate": [0.0001,0.0002,0.0003,0.0004,0.0005, 0.001, 0.002, 0.003, 0.004, 0.005
+                     , 0.006, 0.007, 0.008, 0.009,0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1],
+      "weight_decay": [1e-5, 2e-5, 3e-5, 4e-5, 5e-5, 6e-5, 7e-5, 8e-5, 9e-5,1e-4
+          ,2e-4,3e-4,4e-4,5e-4,6e-4,7e-4,8e-4,9e-4,  1e-3,
+                      2e-3,3e-3,4e-3,5e-3,6e-3,7e-3,8e-3,9e-3,1e-2],
+      "epochs": [2500]
+    },
+    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0001],
+    "weight_decay" :[0.001],
+      "epochs": [2500],
+        "note": "GCN-Amazon_Photo",
+      "order": 4
+    },
+    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0005],
+    "weight_decay" :[0.001],
+      "epochs": [2500],
+        "note": "GCN-Coauthor_CS",
+        "order": 5
+    },
+    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.001],
+    "weight_decay" :[0.001],
+      "epochs": [2500],
+        "note": "GCN-WikiCS",
+        "order": 6
+    },
+    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.001],
+    "weight_decay" :[0.01],
+      "epochs": [2500],
+      "note": "GCN-Cora",
+        "order": 7
+    },
+    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.001],
+    "weight_decay" :[0.01],
+      "epochs": [2500],
+      "note": "GCN-CiteSeer",
+        "order": 8
+    },
+        {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.01],
+    "weight_decay" :[0.005],
+      "epochs": [2500],
+      "note": "GCN-PubMed",
+        "order": 9
+    },
+            {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0005],
+    "weight_decay" :[1e-05],
+      "epochs": [2500],
+      "note": "GAE-Cora",
+        "order": 10
+    },
+                {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.01],
+    "weight_decay" :[5e-05],
+      "epochs": [2500],
+      "note": "GAE-CiteSeer",
+        "order": 11
+    },
+                    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0005],
+    "weight_decay" :[0.0001],
+      "epochs": [2500],
+      "note": "GAE-Amazon_Photo",
+        "order": 12
+    },
+                    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0005],
+    "weight_decay" :[1e-05],
+      "epochs": [2500],
+      "note": "GAE-WikiCS",
+        "order": 13
+    },
+                    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0005],
+    "weight_decay" :[1e-05],
+      "epochs": [2500],
+      "note": "GAE-Coauthor_CS",
+        "order": 14
+    },
+                    {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.01],
+    "weight_decay" :[0.01],
+      "epochs": [2500],
+      "note": "GAT-CiteSeer",
+        "order": 15
+    },
+                        {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.01],
+    "weight_decay" :[0.01],
+      "epochs": [2500],
+      "note": "GAT-Cora",
+        "order": 16
+    },
+                          {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.005],
+    "weight_decay" :[0.001],
+      "epochs": [2500],
+      "note": "GAT-WikiCS",
+        "order": 17
+    },
+                              {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.01],
+    "weight_decay" :[0.005],
+      "epochs": [2500],
+      "note": "GAT-Amazon_Photo",
+        "order": 18
+    },
+                                  {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.01],
+    "weight_decay" :[0.001],
+      "epochs": [2500],
+      "note": "GAT-Coauthor_CS",
+        "order": 19
+    },
+  {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0002],
+    "weight_decay" :[0.01],
+      "epochs": [2500],
+      "note": "DGI-CiteSeer",
+        "order": 20
+    },
+      {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0001],
+    "weight_decay" :[0.007],
+      "epochs": [2500],
+      "note": "DGI-Cora",
+        "order": 21
+    },
+          {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0004],
+    "weight_decay" :[0.0009],
+      "epochs": [2500],
+      "note": "DGI-Coauthor_CS",
+        "order": 22
+    },
+          {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0003],
+    "weight_decay" :[0.009],
+      "epochs": [2500],
+      "note": "DGI-Amazon_Photo",
+        "order": 23
+    },
+          {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0003],
+    "weight_decay" :[0.008],
+      "epochs": [2500],
+      "note": "DGI-WikiCS",
+        "order": 24
+    },
+     {
+      "hidden_dim" : [256],
+    "learning_rate" : [0.005],
+    "weight_decay" :[0.008],
+      "epochs": [2500],
+      "note": "DGI-CiteSeer-256",
+        "order": 25
+    },
+      {
+      "hidden_dim" : [256],
+    "learning_rate" : [0.001],
+    "weight_decay" :[5e-05],
+      "epochs": [2500],
+      "note": "DGI-Cora-256",
+        "order": 26
+    },
+          {
+      "hidden_dim" : [256],
+    "learning_rate" : [0.0001],
+    "weight_decay" :[0.007],
+      "epochs": [2500],
+      "note": "DGI-Coauthor_CS-256",
+        "order": 27
+    },
+          {
+      "hidden_dim" : [256],
+    "learning_rate" : [0.0005],
+    "weight_decay" :[0.0006],
+      "epochs": [2500],
+      "note": "DGI-Amazon_Photo-256",
+        "order": 28
+    },
+          {
+      "hidden_dim" : [256],
+    "learning_rate" : [0.0005],
+    "weight_decay" :[0.008],
+      "epochs": [2500],
+      "note": "DGI-WikiCS-256",
+        "order": 29
+    },
+         {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.01],
+    "weight_decay" :[0.008],
+      "epochs": [2500],
+      "note": "GRACE-CiteSeer",
+        "order": 30
+    },
+      {
+      "hidden_dim" : [256],
+    "learning_rate" : [0.0005],
+    "weight_decay" :[0.0005],
+      "epochs": [2500],
+      "note": "GRACE-Cora",
+        "order": 31
+    },
+          {
+      "hidden_dim" : [128],
+    "learning_rate" : [0.0003],
+    "weight_decay" :[0.01],
+      "epochs": [2500],
+      "note": "GRACE-Amazon_Photo",
+        "order": 32
+    },
+          {
+      "hidden_dim" : [256],
+    "learning_rate" : [0.0001],
+    "weight_decay" :[0.01],
+      "epochs": [200],
+      "note": "GRACE-WikiCS",
+        "order": 33
+    }
+  ],
+    "ricci_flow_args": [
+  {
+      "lrs": [1.0,0.9,0.8,0.7,0.6],
+      "alphas": [0.1,0.2,0.3,0.4,0.5],
+      "iterations": [1,2,3,4,5,6,7]
+    },
+  {
+      "lrs": [1.0],
+      "alphas": [0.1],
+      "iterations": [0]
+    }
+  ],
+  "model_names": ["GCN", "GAT", "SAGE", "GIN", "GAE", "VGAE","DGI","GRACE"],
+  "dataset_names":["WikiCS","Amazon_Photo", "Coauthor_CS", "Cora", "CiteSeer", "PubMed", "Amazon_Computers", "Coauthor_Physics"],
+  "devices": ["cuda:0","cuda:1", "cuda:2", "cuda:3", "cuda:4", "cuda:5", "cuda:6", "cuda:7"],
+  "cross_nums": [
+    {"WikiCS": 20,"others": 10},
+    {"WikiCS": 1,"others": 1},
+    {"WikiCS": 5,"others": 5}
+  ],
+  "choices": {
+    "model_name": -1,
+    "cross_num": 0,
+    "model_arg_debug": 33,
+    "ricci_flow": 0,
+    "dataset_name": 0,
+    "device": 4,
+    "add_edge_weight": true,
+    "round": 10,
+    "epoch_step": 10
+  },
+  "note": "Cora和CiteSeer的round在找最佳参数时设为5，其他的设为1，Cora和CiteSeer的cross_num设为1，其他的设为0。。在最终实验时，Cora和CiteSeer的round设为10，其他的设为1，Cora和CiteSeer的cross_num设为1，其他的设为0。"
+}
