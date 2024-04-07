@@ -1,1 +1,7 @@
 
+we add a gemetric flow module in RGC algorithm to update S matrix.
+
+In our geometric flow setting, you should save the original S matrix using "saveS.m", then use "model.py" to update  the original S matrix.
+Finally, you can run new clustering experiments in "update_and_cluster.m" by loading updated S matrix.
+
+The data file in "data/latent_graph_learning/mat/".
