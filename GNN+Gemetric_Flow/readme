@@ -1,6 +1,14 @@
 You should configure "choices" item in file './config.json'. Take the following configuration as example.
 
 model_name means the training model, for example 0 represents GCN.
+model_arg_debug means the order value of hyperparameter setting for hidden_dim, learning_rate, weight_decay, epochs. 
+cross_num means the number of cross-validation times for different datasets.
+ricci_flow means whether use gemetric flow, 0 mean True.
+dataset_name means the training dataset.
+device means GPU device.
+add_edge_weight means whether use weight in training.
+round means training round.
+epoch_step means how many epochs the model is evaluated and how many epochs the best model is saved.
 
 "choices": {
     "model_name": 0,
