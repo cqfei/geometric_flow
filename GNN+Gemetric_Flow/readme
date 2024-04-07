@@ -1,1 +1,15 @@
+You should configure "choices" item in file './config.json'. Take the following configuration as example.
 
+model_name means the training model, for example 0 represents GCN.
+
+"choices": {
+    "model_name": 0,
+    "cross_num": 0,
+    "model_arg_debug": 33,
+    "ricci_flow": 0,
+    "dataset_name": 0,
+    "device": 4,
+    "add_edge_weight": true,
+    "round": 10,
+    "epoch_step": 10
+  },
