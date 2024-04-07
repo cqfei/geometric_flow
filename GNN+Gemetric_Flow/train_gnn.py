@@ -13,11 +13,10 @@ from log import setup_logger,change_log_file
 logger = setup_logger('my_logger', f'./logs/log.log')
 
 import matplotlib.pyplot as plt
-from models import GCN_NN,GAT_NN,GIN_NN,SAGE_NN,GAE_NN,VGAE_NN
+from models import GCN_NN,GAT_NN,GAE_NN
 from DGI_transductive import GConv as DGI_GConv,Encoder as DGI_Encoder
 from GCL.models import SingleBranchContrast,DualBranchContrast
 from GRACE import GConv as GRACE_GConv,Encoder as GRACE_Encoder
-# from torch_geometric.nn.models import GCN
 
 from sklearn.metrics import roc_auc_score, average_precision_score
 from sklearn.linear_model import LogisticRegression
@@ -37,58 +36,37 @@ logger.info(f'model: {model_name}, device: {device}')
 import warnings
 warnings.filterwarnings("ignore", message="'dropout_adj' is deprecated")
 
-def compute_acc(logits, label):
-    # 获取每个节点的logits中最大数值对应的类别，即模型预测的概率最大的类别
-    prediction = logits.max(dim=-1)[1]
-    accuarcy = torch.eq(prediction, label).float().mean()
-    return accuarcy
-
 def compute_f1(logits, label):
-    # 获取每个节点的logits中最大数值对应的类别，即模型预测的概率最大的类别
     prediction = logits.max(dim=-1)[1]
     f1 = f1_score(label.cpu().numpy(), prediction.cpu().numpy(), average='micro')
     return f1
 
 def train(data,dataset_name,model,best_model_dir,train_mask,val_mask,add_edge_weight=False,model_args=None):
-    # 定义相关的超参数
     learning_rate = model_args[model_name][dataset_name]['learning_rate']
     weight_decay = model_args[model_name][dataset_name]['weight_decay']
     epochs = model_args[model_name][dataset_name]['epochs']
-
-    # 损失函数使用交叉熵损失函数
     criterion = torch.nn.CrossEntropyLoss().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     #################################################
-    # 开始训练
     loss_history = []
     train_f1_history = []
     val_f1_history = []
     best_val_f1 = 0
     best_epoch=0
     for i in range(epochs):
-        # 半监督模式，前向传播获得图上所有节点的分类结果，包括训练，验证和测试的节点。
         if add_edge_weight:
-            # if model_name=='GAT':
-            #     logits = model(data.x, data.edge_index,data.edge_weight_matrix)
-            # else:
-            #     logits = model(data.x, data.edge_index, data.edge_weight)
             logits = model(data.x, data.edge_index, data.edge_weight)
         else:
             logits = model(data.x, data.edge_index, edge_weight=None)
-            # 半监督模式，获得表示/预测结果时利用整图，但进行训练时仅选择训练节点构造loss。半监督模式训练时仅需要有限（这里是140）个训练节点的label。
 
         train_logits = logits[train_mask]
-            # 获取训练节点的对应标签
         train_y = data.y[train_mask]
         loss = criterion(train_logits, train_y)
-        # 清楚优化器中上一步的梯度
         optimizer.zero_grad()
-        # 反向传播，计算参数当前步梯度
         loss.backward()
-        # 根据梯度更新参数
         optimizer.step()
-        # 计算f1
+
         train_f1 = compute_f1(train_logits, train_y)
 
         val_logits, val_label = logits[val_mask], data.y[val_mask]
@@ -98,16 +76,12 @@ def train(data,dataset_name,model,best_model_dir,train_mask,val_mask,add_edge_we
         train_f1_history.append(train_f1.item())
         val_f1_history.append(val_f1.item())
 
-        # if i % 100 == 0:
-        #     logger.info("Epoch: {:03d}: Loss {:.6f}, Trainf1 {:.6f}, Valf1 {:.6f}".format(i, loss.item(), train_f1.item(),
-        #                                                                           val_f1.item()))
+        if i % epoch_step == 0:
+           logger.info("Epoch: {:03d}: Loss {:.6f}, Trainf1 {:.6f}, Valf1 {:.6f}".format(i, loss.item(), train_f1.item(),
+                                                                                 val_f1.item()))
         if best_val_f1<val_f1.item():
             best_val_f1=val_f1.item()
-            # 保存模型
-            # best_model_dir = './models/' + model_name + '_' + best_model_tag + '.pt'
             torch.save(model.state_dict(), best_model_dir)
-            # if os.path.exists(best_model_dir):
-            #     torch.save(model, best_model_dir)
             best_epoch=i
     logger.info(f'Best Epoch: {best_epoch}')
     return loss_history,train_f1_history,val_f1_history,best_epoch
@@ -117,9 +91,8 @@ def train_GAE(data,dataset_name,model,best_model_dir,train_mask,val_mask,add_edg
     weight_decay = model_args[model_name][dataset_name]['weight_decay']
     epochs = model_args[model_name][dataset_name]['epochs']
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-    # encoder = model.encode
+    
     #################################################
-    # 开始训练
     loss_history = []
     train_f1_history = []
     val_f1_history = []
@@ -144,7 +117,6 @@ def train_GAE(data,dataset_name,model,best_model_dir,train_mask,val_mask,add_edg
                 z, reconstructed_x, mu, logvar = model(data.x, data.edge_index,data.edge_weight)
             else:
                 z, reconstructed_x, mu, logvar = model(data.x, data.edge_index)
-            # loss = model.recon_loss(z, data.train_edge_index)
             loss = torch.nn.functional.mse_loss(reconstructed_x[train_mask], data.x[train_mask])
             kl_loss = -0.5 * torch.sum(1 + logvar[train_mask] - mu[train_mask].pow(2) - logvar[train_mask].exp())
             loss += kl_loss
@@ -168,8 +140,6 @@ def train_GAE(data,dataset_name,model,best_model_dir,train_mask,val_mask,add_edg
 
         if best_val_f1<val_f1:
             best_val_f1=val_f1
-            # 保存模型
-            # best_model_dir = './models/' + model_name + '_' + best_model_tag + '.pt'
             torch.save(model.state_dict(), best_model_dir)
             best_epoch=epoch
     logger.info(f'Best Epoch: {best_epoch}')
