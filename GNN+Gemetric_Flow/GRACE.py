@@ -1,16 +1,11 @@
 import torch
-import os.path as osp
 import GCL.losses as L
 import GCL.augmentors as A
 import torch.nn.functional as F
 import torch_geometric.transforms as T
 
-from tqdm import tqdm
-from torch.optim import Adam
-from GCL.eval import get_split, LREvaluator
 from GCL.models import DualBranchContrast
 from torch_geometric.nn import GCNConv
-from torch_geometric.datasets import Planetoid
 from torch import nn
 
 class GConv(torch.nn.Module):
