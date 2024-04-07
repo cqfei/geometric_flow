@@ -7,7 +7,6 @@ from torch import nn
 from torch.optim import Adam
 import GCL.losses as L
 import GCL.augmentors as A
-# import logging
 import time
 from log import setup_logger,change_log_file
 logger = setup_logger('my_logger', f'./logs/log.log')
@@ -515,7 +514,7 @@ def run_mutiple_dataset(datasets,model_args,add_edge_weight):
                 try:
                     logger.info(f'arg order: {cnt}')
                     logger.info(f'lr: {lr}, alpha: {alpha}, iteration: {i}')
-                            # weight_matrix_new = rft.update_weight(weight_matrix,iterations=i,lr=lr,alpha=alpha)
+                    # load updated weight_matrix
                     weight_matrix_new=np.load(f'./data/graphs/nbr_matrix/{dataset_name}_lr{lr}_alpha{alpha}_iter{i}.npz')
                     dense_matrix=torch.from_numpy(weight_matrix_new['matrix']).float()
                     weights=dense_matrix[data.edge_index[0],data.edge_index[1]]
@@ -527,8 +526,6 @@ def run_mutiple_dataset(datasets,model_args,add_edge_weight):
                     mean_stds.append((lr,alpha,i,mean_value,std_deviation))
                 except:
                     logger.info(f'error arg: lr: {lr}, alpha: {alpha}, iteration: {i} failed')
-                    # import traceback
-                    # traceback.print_exc()
                     error_list.append((lr,alpha,i))
                     max_avg=0
                     std=0
@@ -561,7 +558,6 @@ def run_mutiple_dataset(datasets,model_args,add_edge_weight):
 def main():
     start_time = time.time()
     logger.info(f"Starting time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}")
-    # print(f"Starting time: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start_time))}")
 
     datasets = [args_all["dataset_names"][args_all["choices"]["dataset_name"]]]
     add_edge_weight = args_all["choices"]["add_edge_weight"]
@@ -576,7 +572,6 @@ def main():
     args = list(product(hidden_dim, learning_rate, weight_decay,epochs))
     logger.info(f'dataset: {datasets[0]}, add_edge_weight: {add_edge_weight}, round: {round}')
     model_args = args_all['model_args']
-    # mean_values=[]
 
     for arg in args:
         logger.info(f'hidden_dim: {arg[0]}, learning_rate: {arg[1]}, weight_decay: {arg[2]}, epochs: {arg[3]}')
@@ -607,4 +602,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # debug_model_args()
