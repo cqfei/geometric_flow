@@ -283,8 +283,8 @@
       "iterations": [0]
     }
   ],
-  "model_names": ["GCN", "GAT", "SAGE", "GIN", "GAE", "VGAE","DGI","GRACE"],
-  "dataset_names":["WikiCS","Amazon_Photo", "Coauthor_CS", "Cora", "CiteSeer", "PubMed", "Amazon_Computers", "Coauthor_Physics"],
+  "model_names": ["GCN", "GAT", "GAE","DGI","GRACE"],
+  "dataset_names":["WikiCS","Amazon_Photo", "Coauthor_CS", "Cora", "CiteSeer"],
   "devices": ["cuda:0","cuda:1", "cuda:2", "cuda:3", "cuda:4", "cuda:5", "cuda:6", "cuda:7"],
   "cross_nums": [
     {"WikiCS": 20,"others": 10},
