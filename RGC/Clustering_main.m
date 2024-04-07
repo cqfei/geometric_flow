@@ -1,5 +1,5 @@
 clear
-dataset_name='JAFFE';
+dataset_name='YALE';
 dlmwrite('./result/'+ "" +dataset_name+ "" +'.txt',['start training:'],'-append','delimiter','','newline','pc');
  % load('./data/YALE_165n_1024d_15c_uni.mat');
  load('./data/'+""+dataset_name+ "" +'.mat');
