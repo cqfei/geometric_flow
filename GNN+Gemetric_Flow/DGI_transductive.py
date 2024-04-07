@@ -4,9 +4,6 @@ import GCL.losses as L
 import torch_geometric.transforms as T
 
 from torch import nn
-from tqdm import tqdm
-from torch.optim import Adam
-from GCL.eval import get_split, LREvaluator
 from GCL.models import SingleBranchContrast
 from torch_geometric.nn import GCNConv
 from torch_geometric.nn.inits import uniform
