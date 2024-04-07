@@ -1,2 +1,6 @@
 
 b=0.001,m=0.5 is the best hyperparameter that original RGC algorithm achieve the best performance in YALE dataset. We save the S matrix in this setting.
+In S_update fold, we provide all update matrix for matrix YALE_b0.001_m5.mat in the flowing setting: 
+lrs=[0.5,0.6,0.7,0.8,0.9,1.0];
+iterations=[1,2,3,4,5,6,7];
+alphas_rc=[0.1,0.2,0.3,0.4,0.5];
