@@ -2,4 +2,4 @@
 we add a module to update S matrix.
 
 In our geometric flow setting, you should save the original S matrix using "saveS.m", then use "model.py" to update  the original S matrix.
-Finally, you can run new clustering experiments in "update_and_cluster.m".
+Finally, you can run new clustering experiments in "update_and_cluster.m" by loading updated S matrix.
