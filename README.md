@@ -11,7 +11,7 @@ Whether in latent graph learning task or graph neural network task, you need to 
 You should prepare the dataset for graph neural network task by yourself.
 
 ## Manifold Learning task
-1. learner.py is used to train in manifold learning task. For example, train on dataset "gender".
+1. learner_manifold_learning.py is used to train in manifold learning task. For example, train on dataset "gender".
    
     dataset='gender'
    
