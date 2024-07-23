@@ -59,13 +59,7 @@ class RicciFlowTrainer:
         else:
             A = A.toarray()
 
-        # convert distance matrix to similarity matrix
-        A_arr = A.copy().astype(float)
-        mask = A_arr != 0.0
-        A_arr[mask] = 1 / A_arr[mask]
-        A = A_arr
-
-        # update the similarity matrix with Ollivier-Ricci flow
+        # update the weight matrix with Ollivier-Ricci flow
         start_time = time.time()
         for i in range(iterations):
             nx_graph = nx.from_numpy_matrix(A)
@@ -80,12 +74,6 @@ class RicciFlowTrainer:
         end_time = time.time()
         cost = end_time - start_time
         print('iter times', iterations ,'Ollivier cost:', cost)
-
-        # convert similarity matrix to distance matrix
-        A_arr = A.copy().astype(float)
-        mask = A_arr != 0.0
-        A_arr[mask] = 1 / A_arr[mask]
-        A = A_arr
 
         return self.matrix_prune(self.norm(A),prune_ratio=prune_ratio)
 
